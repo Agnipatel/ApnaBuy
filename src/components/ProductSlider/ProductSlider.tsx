@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function ProductSlider() {
-  const scrollRef = useRef(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
 
   const products = [
     "/Product/b.jpg",
@@ -20,24 +20,29 @@ export default function ProductSlider() {
     "/Product/b8.jpg",
   ];
 
-  const scroll = (direction) => {
-    const { current } = scrollRef;
-    const scrollDistance = current.offsetWidth / 2;
+  const scroll = (direction: "left" | "right") => {
+    const slider = scrollRef.current;
+    if (!slider) return;
+
+    const scrollDistance = slider.offsetWidth / 2;
     if (direction === "left") {
-      current.scrollBy({ left: -scrollDistance, behavior: "smooth" });
+      slider.scrollBy({ left: -scrollDistance, behavior: "smooth" });
     } else {
-      current.scrollBy({ left: scrollDistance, behavior: "smooth" });
+      slider.scrollBy({ left: scrollDistance, behavior: "smooth" });
     }
   };
 
   useEffect(() => {
     const slider = scrollRef.current;
+    if (!slider) return;
+
     const interval = setInterval(() => {
       slider.scrollBy({ left: 1, behavior: "smooth" });
       if (slider.scrollLeft + slider.offsetWidth >= slider.scrollWidth) {
         slider.scrollLeft = 0;
       }
     }, 20);
+
     return () => clearInterval(interval);
   }, []);
 

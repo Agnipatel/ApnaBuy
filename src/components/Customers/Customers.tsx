@@ -69,15 +69,17 @@ const products = [
 ];
 
 export default function Recommendations() {
-  const scrollRef = useRef(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
 
-  const scroll = (direction) => {
+  const scroll = (direction: "left" | "right") => {
     const container = scrollRef.current;
-    const scrollAmount = 300;
+    if (!container) return;
+
+    const scrollDistance = container.offsetWidth / 2; // Use container, not slider
     if (direction === "left") {
-      container.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+      container.scrollBy({ left: -scrollDistance, behavior: "smooth" });
     } else {
-      container.scrollBy({ left: scrollAmount, behavior: "smooth" });
+      container.scrollBy({ left: scrollDistance, behavior: "smooth" });
     }
   };
 
@@ -88,7 +90,7 @@ export default function Recommendations() {
       </h2>
 
       <div className="relative">
-        {/* Scroll Buttons */}
+        {/* Left Button */}
         <button
           onClick={() => scroll("left")}
           className="absolute left-0 top-1/2 -translate-y-1/2 bg-white shadow-md rounded-full p-2 z-10 hover:bg-gray-100"
@@ -96,6 +98,7 @@ export default function Recommendations() {
           <ChevronLeft />
         </button>
 
+        {/* Slider */}
         <div
           ref={scrollRef}
           className="flex overflow-x-auto gap-4 scroll-smooth pb-4 px-10"
@@ -152,6 +155,7 @@ export default function Recommendations() {
           ))}
         </div>
 
+        {/* Right Button */}
         <button
           onClick={() => scroll("right")}
           className="absolute right-0 top-1/2 -translate-y-1/2 bg-white shadow-md rounded-full p-2 z-10 hover:bg-gray-100"
